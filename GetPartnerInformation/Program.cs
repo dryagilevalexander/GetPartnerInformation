@@ -3,6 +3,8 @@ using System.Net;
 using System.IO;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 HttpClient httpClient = new HttpClient();
 
@@ -49,17 +51,21 @@ wrGETURL = WebRequest.Create(sURL);
 Stream objStream;
 objStream = wrGETURL.GetResponse().GetResponseStream();
 StreamReader objReader = new StreamReader(objStream);
+string partnerInformation = "";
+partnerInformation = objReader.ReadLine();
 
-string sLine = "";
-int i = 0;
-
-while (sLine != null)
+if (partnerInformation!= "{\"rows\":[]}") //Если организация найдена
 {
-    i++;
-    sLine = objReader.ReadLine();
-    if (sLine != null)
-        Console.WriteLine("{0}:{1}", i, sLine);
+    //Удаляем ненужные символы для приведения строки к json формату
+    partnerInformation = partnerInformation.Replace("{\"rows\":", "");
+    partnerInformation = partnerInformation.Replace("]}", "]");
+
+    //Преобразуем строку в json
+    List<JsonPartnerInformation> jsonPartnerInformation = JsonConvert.DeserializeObject<List<JsonPartnerInformation>>(partnerInformation);
+
+    Console.WriteLine($"{jsonPartnerInformation[0].n} {jsonPartnerInformation[0].i} {jsonPartnerInformation[0].o}");
 }
+else Console.WriteLine("Организация не найдена");
 Console.ReadLine();
 
 class ReqBody
@@ -70,4 +76,28 @@ class ReqBody
     public string nameEq { get; set; }
     public string region { get; set; }
     public string PreventChromeAutocomplete { get; set; } 
+}
+
+public class JsonPartnerInformation
+{
+    public string a { get; set; }
+    public string c { get; set; }
+    public string g { get; set; }
+    public string cnt { get; set; }
+    public string i { get; set; }
+    public string k { get; set; }
+    public string o184 { get; set; }
+    public string n { get; set; }
+    public string o { get; set; }
+    public string p { get; set; }
+    public string r { get; set; }
+    public string t { get; set; }
+    public string pg { get; set; }
+    public string tot { get; set; }
+
+
+
+
+
+
 }
