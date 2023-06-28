@@ -94,10 +94,4 @@ public class JsonPartnerInformation
     public string t { get; set; }
     public string pg { get; set; }
     public string tot { get; set; }
-
-
-
-
-
-
 }
